@@ -1,10 +1,9 @@
 Le but de ce tutoriel est de découvrir react en construisant une application.
 
-
-
 # 🏗️ Etape 1 : Démarrer un nouveau projet react
 
-ℹ️ Ce tutoriel n'utilise pas de solution automatique telle que _create-react-app_ (https://fr.reactjs.org/docs/create-a-new-react-app.html).
+ℹ️ Ce tutoriel n'utilise pas de solution automatique telle que _
+create-react-app_ (https://fr.reactjs.org/docs/create-a-new-react-app.html).
 
 ## 🧱 Installer les modules nécessaires
 
@@ -75,18 +74,19 @@ const path = require('path');
    } 
 };
 ```
-ℹ `path: path.resolve(__dirname, 'dist'),
-filename: 'arolla-react-example.bundle.js'` = le bundle nommé _arolla-react-example.bundle.js_ sera dans le répertoire _dist_
+
+ℹ `path: path.resolve(__dirname, 'dist'), filename: 'arolla-react-example.bundle.js'` = le bundle nommé _
+arolla-react-example.bundle.js_ sera dans le répertoire _dist_
 
 ℹ `resolve: { extensions: ['.js', '.ts', '.tsx']}` = extensions de fichiers acceptées .js, .ts, .tsx
 
-ℹ `  { test: /\.tsx?$/, exclude: /node_modules/, use: { loader: "babel-loader"} }` = si mon fichier est un .tsx le traiter avec babel
-
+ℹ `  { test: /\.tsx?$/, exclude: /node_modules/, use: { loader: "babel-loader"} }` = si mon fichier est un .tsx le
+traiter avec babel
 
 7. Créer un dossier _dist_ ( = distribution) vide
 
    ℹ le bundle sera créé dedans lors du build
-   
+
 
 8. Créer un fichier _index.html_, ajouter au moins une balise avec un id et une balise script pointant vers le bundle
 
@@ -94,10 +94,8 @@ filename: 'arolla-react-example.bundle.js'` = le bundle nommé _arolla-react-exa
  <div id="projet"></div>
    <script src="./dist/arolla-react-example.bundle.js"></script>
  ```
+
 ℹ Le div#projet est destiné à contenir l'application
-
-
-
 
 9. Dans le _package.json_, ajouter une ligne dans scripts `"build": "webpack"` :
 
@@ -168,6 +166,7 @@ const App : React.FC = () => (
 
 export default App;
 ```
+
 ℹ Ce sera notre composant principal racine de tous les autres
 
 ℹ L'extension .tsx accepte le html et le typescript
@@ -183,14 +182,12 @@ const container = document.getElementById('projet');
 ReactDom.render(<App/>,  container);
 ```  
 
-
-
-ℹ Ce sera le fichier principal du projet comme l'indique la ligne ` "main": "index.js" ` du _package.json_ 
+ℹ Ce sera le fichier principal du projet comme l'indique la ligne ` "main": "index.js" ` du _package.json_
 et `entry: './src/index.tsx',` _dans webpack.config.js_.
 
 ℹ Le container ici est la balise ajoutée dans _index.html_.
 
-## 🔑 Démarrer l'application
+## <a name="start-app"></a> 🔑 Démarrer l'application
 
 15. Builder le projet ` npm run build`
 16. Lancer le serveur ` npm run serve`
@@ -201,10 +198,123 @@ et `entry: './src/index.tsx',` _dans webpack.config.js_.
 18. Lancer la commande `tsc --init` à la racine du projet (Penser à mettre à jour les variables d'environnement)
 
     👉 cela créera un fichier _tsconfig.json_ (ou bien créez-le)
-    
+
 19. Mettre la ligne à true :
-        `"esModuleInterop": true,  `
+    `"esModuleInterop": true,  `
+
+# 🧩 Etape 2 : Créer un composant
+
+Nous allons créer une liste (de choses à faire, de challenges, d'ingrédients de cuisine...selon votre humeur), soit 2
+composants :
+
+* un formulaire pour ajouter un élément à la liste
+* un composant pour afficher la liste
+
+1. Créer un répertoire _todolist_
+2. Dedans, créer un fichier _ItemCreationComponent.tsx_ : le formulaire d'ajout
+3. Dedans, créer un fichier _ListDisplayComponent.tsx_ : la liste affichée
+
+Voici les deux manières de faire, en faire un composant de chaque style :
+
+## En tant que fonction
+
+4. Créer une nouvelle fonction dans le fichier _ItemCreationComponent.tsx_ :
+
+  ```
+    const ItemCreationComponent = () => { };
+ ```
+
+5. ...qui retourne le html du formulaire :
+
+  ```
+    import React from 'react';
     
+    const ItemCreationComponent: React.FC = ()  => {
+
+        return  (<form id="todolist">
+                    <label htmlFor="item">Je dois faire : </label>
+                    <input type="text" name="item"></input>
+                    <button type="submit"> ok </button>
+                </form>);
+        };
+    }
+
+ ```
+
+6. ...et l'exporter :
+
+  ```  
+    export default ItemCreationComponent;
+  ```
+
+7. ...puis l'importer dans le composant principal _App.tsx_ (créé à l'étape 1) :
+
+  ```  
+  import React from 'react';
+  import ItemCreationComponent from './todolist/ItemCreationComponent';
+  
+    const App : React.FC = () => (
+       <ItemCreationComponent/>
+    );
+  ```
+
+8. Lancer l'application [comment faire ?](#start-app)
+
+## En tant que classe
+
+9. Créer une nouvelle classe dans le fichier _ListDisplayComponent.tsx_ :
+
+  ```
+    class ListDisplayComponent  {
+       ....
+    }  
+ ```
+
+10. ...qui étend l'interface React.Component et implémente la fonction render()  :
+
+  ```
+    import React from 'react';
+    
+    class ListDisplayComponent extends React.Component {
+        render() {
+            return <div id="listOfItems"> 
+                        emplacement pour ma future liste
+                   </div>;
+        };
+    }
+
+ ```
+
+11. ...et l'exporter :
+
+  ```  
+    export default ListDisplayComponent;
+  ```
+
+12. ...puis l'importer dans le composant principal _App.tsx_ (créé à l'étape 1) :
+
+  ```  
+  import React from 'react';
+  import ItemCreationComponent from './todolist/ItemCreationComponent';
+  import ListDisplayComponent from './todolist/ListDisplayComponent';
+  
+    const App : React.FC = () => (
+         <div>
+            <ItemCreationComponent/>
+            <ListDisplayComponent/>
+         </div>
+    );
+  ```
+
+13. Lancer l'application  [comment faire ?](#start-app)
+    👉 Vous devez voir apparaître vos deux composants.
+
+## Pour terminer
+Les deux composants que vous avez créés ne sont pas fonctionnels. 
+Nous allons voir dans la prochaine étape comment ajouter du comportement aux composants 
+et les faire communiquer entre eux.
+
+
 
 
     
